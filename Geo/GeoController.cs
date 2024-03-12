@@ -1,5 +1,8 @@
+using Geo.Models;
+
 namespace Geo
 {
+	
 	public class GeoController : IGeoController
 	{
 		private readonly HttpClient _client;
@@ -11,18 +14,18 @@ namespace Geo
 			_apiKey = apiKey;
 		}
 		
-		public async Task<string> GeocodeAddress(string city, string state, string country)
+		public GeoResponse? GeocodeAddress(string city, string state, string country)
 		{
 			try
 			{
 				string url = $"http://api.openweathermap.org/geo/1.0/direct?q={city},{state},{country}&limit=5&appid={_apiKey}";
 
-				HttpResponseMessage response = await _client.GetAsync(url);
+				HttpResponseMessage response = _client.GetAsync(url).Result;
 
 				if (response.IsSuccessStatusCode)
 				{
-					string responseBody = await response.Content.ReadAsStringAsync();
-					return responseBody;
+					string responseBody = response.Content.ReadAsStringAsync().Result;
+					return GeoResponse.DeserializeFromJsonAsync(responseBody, country);
 				}
 				else
 				{

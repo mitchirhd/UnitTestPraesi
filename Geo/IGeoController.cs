@@ -1,7 +1,9 @@
+using Geo.Models;
+
 namespace Geo
 {
-	interface IGeoController
+	public interface IGeoController
     {
-    	// Tuple<coords, coords> GetCoords(string addr1, string addr2);
+        GeoResponse? GeocodeAddress(string city, string state, string country);
     }
 }
